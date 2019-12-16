@@ -15,6 +15,10 @@
  */
 package org.springframework.samples.petclinic.vet;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.*;
+
 import org.junit.Test;
 
 import org.springframework.util.SerializationUtils;
@@ -29,15 +33,36 @@ public class VetTests {
 
     @Test
     public void testSerialization() {
-        Vet vet = new Vet();
+        final Vet vet = new Vet();
         vet.setFirstName("Zaphod");
         vet.setLastName("Beeblebrox");
         vet.setId(123);
-        Vet other = (Vet) SerializationUtils
-                .deserialize(SerializationUtils.serialize(vet));
+        final Vet other = (Vet) SerializationUtils.deserialize(SerializationUtils.serialize(vet));
         assertThat(other.getFirstName()).isEqualTo(vet.getFirstName());
         assertThat(other.getLastName()).isEqualTo(vet.getLastName());
         assertThat(other.getId()).isEqualTo(vet.getId());
+    }
+
+    @Test
+    public void getNumberOfSpecialties() {
+        Specialty specialty1 = new Specialty();
+        specialty1.setName("Surgery");
+        Vet vet = new Vet();
+        vet.addSpecialty(specialty1);
+        final int nrOfSpecialties = vet.getNrOfSpecialties();
+
+        assertEquals(1, nrOfSpecialties);        
+    }
+
+    @Test
+    public void hasSpecialties() {
+        Specialty specialty1 = new Specialty();
+        specialty1.setName("Surgery");
+        Vet vet = new Vet();
+        vet.addSpecialty(specialty1);
+        List<Specialty> listOfSpecialties = vet.getSpecialties();
+        boolean isEmpty = listOfSpecialties.isEmpty();
+        assertEquals(false, isEmpty);
     }
 
 }
